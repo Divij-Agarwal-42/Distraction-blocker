@@ -1,11 +1,28 @@
 // These functions are being used by timerscript.js and landing_page.js
-export { go_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site };
+export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site };
 
 // Storing value of timer value
 let set_timer = async (time) => {
     await chrome.storage.local.set({ time_value: time }).then(() => {
         console.log("Value is set");
     });
+}
+
+// Setting value for url
+let set_initial_url = async (the_url) => {
+  await chrome.storage.local.set({ initial_url: the_url }).then(() => {
+      console.log("Value is set");
+  });
+}
+
+// Getting value for url
+async function get_initial_url() {
+  try {
+    let url_object = await chrome.storage.local.get(["initial_url"]);
+    return url_object.initial_url;
+  } catch {
+    return "Error";
+  }
 }
 
 // Storing value of hiding recommendations and hiding comments (true / false)
@@ -61,10 +78,6 @@ let running = false;
 // }
 
 // Proceed button initiates this, goes back to video
-let go_back = function () {
-  console.log("go back runs");
-  chrome.tabs.update({ url: initial_url });
-}
 
 let blocked = false
 let initial_url;
@@ -82,8 +95,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
   }
   
   if (tab.url && tab.url.includes("youtube.com/watch")) {
-      initial_url = tab.url;
-      console.log(initial_url);
+      set_initial_url(tab.url);
       if (blocked == false) {
         blocked = true;
         running = true;
@@ -97,4 +109,14 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
 // Close the site, open new tab, when exit is clicked on timer
 function close_site() {
   chrome.tabs.create({ url: 'chrome://newtab' });
+}
+
+async function going_back() {
+  try {
+    let url_received = await get_initial_url();
+    console.log(url_received);
+    chrome.tabs.update({ url : url_received });
+  } catch {
+    console.log("Error");
+  }
 }

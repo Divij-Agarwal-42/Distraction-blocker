@@ -1,4 +1,4 @@
-import { go_back, get_timer, close_site } from "./background.js";
+import { going_back, get_timer, close_site } from "./background.js";
 
 const proceedButton = document.querySelector('#proceed');
 
@@ -35,6 +35,6 @@ exitButton.addEventListener('click', function() {
 });
 
 proceedButton.addEventListener('click', function() {
-    go_back();
+    going_back();
     //window.location.href = initial_url;
 })
