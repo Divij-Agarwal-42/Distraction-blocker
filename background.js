@@ -7,7 +7,6 @@ let set_timer = async (time) => {
         console.log("Value is set");
     });
 }
-
 // Setting value for url
 let set_initial_url = async (the_url) => {
   await chrome.storage.local.set({ initial_url: the_url }).then(() => {
@@ -24,7 +23,6 @@ async function get_initial_url() {
     return "Error";
   }
 }
-
 // Storing value of hiding recommendations and hiding comments (true / false)
 let hide_stuff = async (t1, t2) => {
   await chrome.storage.local.set({ hide_recs: t1, hide_coms: t2 }).then(() => {
@@ -42,7 +40,6 @@ async function get_hiding_values(toggle1, toggle2) {
       return "Error";
     }
 }
-
 // Getting timer value
 let get_timer = async function() {
   try {
@@ -55,7 +52,6 @@ let get_timer = async function() {
 }
 
 // Variable to prevent weird behaviour when user tries to leave when timer comes
-let running = false;
 
 // Waiting for timer to complete basically
 // async function update_timer(initial_url) {
@@ -84,12 +80,6 @@ let initial_url;
 
 // Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
-  if (tab.url && tab.url.includes("timer.html")) {
-    running = true;
-  } else {
-    running = false;
-  }
-
   if (tab.url && tab.url.includes("youtube.com")) {
     chrome.tabs.sendMessage(tabId, "reloaded");
   }
@@ -98,7 +88,6 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
       set_initial_url(tab.url);
       if (blocked == false) {
         blocked = true;
-        running = true;
         chrome.tabs.update({ url: chrome.runtime.getURL("timer.html") });
       } else if (blocked == true) {
         blocked = false;
