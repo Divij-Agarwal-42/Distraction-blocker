@@ -1,0 +1,23 @@
+<HTML>
+    <head>
+        <title>Distraction Blocker Settings</title>
+        <meta charset = "UTF-8">
+        <link rel = "stylesheet" href = "landing_page.css">
+    </head>
+
+    <body>
+        <h1>Distraction Blocker Settings</h1>
+        <img src = "reading-time_images/yt_logo.png" id = "ytLogo">
+        <div id = "gridParent">
+            <div class = "gchild timeLabel"> Enter time (in seconds) </div>
+            <div class = "gchild">
+            <input id = "timeInput"><button id = "submitTime">Submit</button>
+            </div>
+            <div class = "gchild YTrecommendations"> Hide Recommendations</div>
+            <input id = "recommendationsToggle" class = "gchild toggle" type="checkbox">
+            <div class = "gchild YTcomments"> Hide Comments</div>
+            <input id = "commentsToggle" class = "gchild toggle" type="checkbox">
+        </div>
+    </body>
+    <script type = "module" src = "landing_page.js"></script>
+</HTML>

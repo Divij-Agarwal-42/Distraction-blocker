@@ -1,0 +1,46 @@
+{
+    "manifest_version": 3,
+    "name": "Distraction Blocker",
+    "version": "1.0",
+    "description": "Destroy your addiction to sites like YouTube",
+    "permissions": [
+      "webRequest",
+      "tabs",
+      "storage",
+      "activeTab"
+    ],
+
+    "action": {
+      "default_popup": "popup.html"
+    },
+
+    "host_permissions": [
+      "*://*.youtube.com/*"
+    ],
+
+    "icons": {
+        "16": "reading-time_images/icon-16.png",
+        "32": "reading-time_images/icon-32.png",
+        "48": "reading-time_images/icon-48.png",
+        "128": "reading-time_images/icon-128.png"
+      },
+    
+    "background": {
+      "service_worker": "background.js",
+      "type": "module"
+    },
+      
+    "content_scripts": [
+        {
+          "matches": [
+            "https://www.youtube.com/*",
+            "https://developer.chrome.com/docs/extensions/*",
+            "https://quotes.toscrape.com/*"
+          ],
+          "js": ["content.js"]
+        }
+      ]
+    
+
+}
+  

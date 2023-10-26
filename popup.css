@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+body {
+    width: 200px;
+    height: 300px;
+    background-color: #1a1818;
+    
+}
+
+#goToLandingPage {
+    background-color: rgb(48, 47, 47);
+    padding: 5px;
+    border-radius: 5px;
+    font-family: "Roboto";
+    font-size: 1rem;
+    width: 100px;
+    color: rgb(215, 213, 213);
+    box-shadow: 2px 2px 2px 2px black;
+    transition: transform 0.3s;
+
+}
+
+#goToLandingPage:hover {
+    transform: translateY(-3%);
+}
+
+a {
+    text-decoration: none;
+}
+
