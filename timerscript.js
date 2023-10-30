@@ -1,6 +1,7 @@
-import { going_back, get_timer, close_site } from "./background.js";
+import { going_back, get_timer, close_site, set_last_video } from "./background.js";
 
 const proceedButton = document.querySelector('#proceed');
+const lastVidButton = document.querySelector("#last_vid");
 
 function startCountdown(start_time) {
     function countdown() {
@@ -38,3 +39,9 @@ proceedButton.addEventListener('click', function() {
     going_back();
     //window.location.href = initial_url;
 })
+
+lastVidButton.addEventListener('click', function() {
+    set_last_video();
+    going_back();
+})
+

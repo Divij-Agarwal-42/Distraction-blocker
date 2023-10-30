@@ -1,5 +1,5 @@
 // These functions are being used by timerscript.js and landing_page.js
-export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site };
+export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site, set_last_video };
 
 // Storing value of timer value
 let set_timer = async (time) => {
@@ -75,11 +75,24 @@ let get_timer = async function() {
 
 // Proceed button initiates this, goes back to video
 
+// Blocked = false means initiate timer, true means don't
 let blocked = false
 let initial_url;
+let last_video = false;
+
+function set_last_video() {
+  last_video = true;
+}
 
 // Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
+  if (last_video == true) {
+    console.log("Should close ?");
+    chrome.tabs.remove(tabId);
+  }
+
+  console.log(blocked);
+
   if (tab.url && tab.url.includes("youtube.com")) {
     chrome.tabs.sendMessage(tabId, "reloaded");
   }
@@ -97,6 +110,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
 // Close the site, open new tab, when exit is clicked on timer
 function close_site() {
+  blocked = false;
   chrome.tabs.create({ url: 'chrome://newtab' });
 }
 
