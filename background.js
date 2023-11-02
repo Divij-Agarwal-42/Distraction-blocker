@@ -75,24 +75,38 @@ let get_timer = async function() {
 
 // Proceed button initiates this, goes back to video
 
-let blocked = false
+let blocked = 0 // 0 means timer isn't there, 1 means timer is working rn, 2 means user returned to video after timer
 let initial_url;
 
 // Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
+  console.log("BLocked value is", blocked);
+
   if (tab.url && tab.url.includes("youtube.com")) {
     chrome.tabs.sendMessage(tabId, "reloaded");
   }
   
   if (tab.url && tab.url.includes("youtube.com/watch")) {
       set_initial_url(tab.url);
-      if (blocked == false) {
-        blocked = true;
+
+      if ((blocked == 0) || (blocked == 1)) {
+        blocked = 1;
         chrome.tabs.update({ url: chrome.runtime.getURL("timer.html") });
-      } else if (blocked == true) {
-        blocked = false;
+
+        get_timer().then((value) => {
+          setTimeout(() => {
+            blocked = 2;
+          }, (value - 1) * 1000);
+        })
+
       }
   }
+  
+  if (blocked == 2) {
+    blocked = 0;
+  }
+
+
 })
 
 // Close the site, open new tab, when exit is clicked on timer

@@ -34,6 +34,7 @@ exitButton.addEventListener('click', function() {
   window.close();
 });
 
+
 proceedButton.addEventListener('click', function() {
     going_back();
     //window.location.href = initial_url;
