@@ -86,7 +86,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
     chrome.tabs.sendMessage(tabId, "reloaded");
   }
   
-  if (tab.url && tab.url.includes("youtube.com/watch")) {
+  if (tab.url && (tab.url.includes("youtube.com/watch") || (tab.url.includes("youtube.com/shorts")))) {
       set_initial_url(tab.url);
 
       if ((blocked == 0) || (blocked == 1)) {

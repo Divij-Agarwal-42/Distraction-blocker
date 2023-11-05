@@ -33,9 +33,7 @@
     "content_scripts": [
         {
           "matches": [
-            "https://www.youtube.com/*",
-            "https://developer.chrome.com/docs/extensions/*",
-            "https://quotes.toscrape.com/*"
+            "https://www.youtube.com/*"
           ],
           "js": ["content.js"]
         }
