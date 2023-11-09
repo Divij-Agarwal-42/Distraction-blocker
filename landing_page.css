@@ -53,8 +53,10 @@ h1 {
 
 #timeoutSettings {
     grid-row: 3/4;
+    display: grid;
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: 3fr 1fr;
+    gap: 20px;
 }
 
 .gChild {
@@ -83,31 +85,33 @@ h1 {
 }
 
 #timeInput {
+    grid-row: 1 / 3;
+    grid-column: 2 / 3;
     height: 1.5rem;
-    width: 100px;
+    width: 50px;
     color: white;
     background-color: black;
     border: none;
     border-radius: 5px;
     padding: 7px;
+    margin-top: 20%;
 }
 
 #submitTime {
-    width: 100px;
-    height: 20px;
-    background-color: white;
+    grid-row: 1 / 3;
+    grid-column: 2 / 3;
+    width: auto;
+    height: 1.5rem;
+    background-color: grey;
     color: black;
-    margin-top: 5px;
+    margin-left: 50px;
     border-radius: 5px;
+    margin-top: 20%;
 }
 
 .toggle {
     width: 30px;
     height: 30px;
-}
-
-.timelabel {
-    grid-column: 1 / 3;
 }
 
 .shorts {
