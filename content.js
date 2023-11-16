@@ -1,14 +1,24 @@
 let toggle1 = true;
 let toggle2 = true;
 
+let reload_counter = 1;
+
+function reload_home() {
+
+  if (reload_counter == 0) {
+    location.reload(true);
+    reload_counter++;
+  }
+}
 // hide recommendations, comments
 var justDoIt = function (){
 
   let noti_element = document.querySelector(".notification-button-style-type-default");
   (noti_element) ? noti_element.remove() : null;
 
-  if (window.location.href.indexOf("watch?v=") < 0) {
+  if ((window.location.href.indexOf("watch?v=") < 0) && (window.location.href.endsWith("youtube.com/"))) {
     //let recommended_element = document.querySelector("#dismissable")
+    reload_home();
     let side_menu = document.querySelector("#guide-content");
     let primary = document.querySelector("#primary");
 
@@ -16,7 +26,7 @@ var justDoIt = function (){
         clearInterval(interval_id);
 
         if(toggle1){
-            primary.style.display = "none";
+            primary.remove();
             console.log("This is working as expecte")
             //recommended_element.style.display = "none";
         }
@@ -62,6 +72,7 @@ load_values();
 
 // Listen for whenever page reloads, then load values (load values calls justDoit())
 chrome.runtime.onMessage.addListener((obj, sender, response) => {
+  reload_counter = 0; 
     if (obj === "reloaded") {
         console.log("PAGE RELOADED, content.js thiss side")
         load_values();
