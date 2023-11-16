@@ -54,9 +54,8 @@ h1 {
 #timeoutSettings {
     grid-row: 3/4;
     display: grid;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 3fr 1fr;
-    gap: 20px;
 }
 
 .gChild {
@@ -85,7 +84,7 @@ h1 {
 }
 
 #timeInput {
-    grid-row: 1 / 3;
+    grid-row: 1 / 2;
     grid-column: 2 / 3;
     height: 1.5rem;
     width: 50px;
@@ -94,11 +93,13 @@ h1 {
     border: none;
     border-radius: 5px;
     padding: 7px;
-    margin-top: 20%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #submitTime {
-    grid-row: 1 / 3;
+    grid-row: 1 / 2;
     grid-column: 2 / 3;
     width: auto;
     height: 1.5rem;
@@ -106,7 +107,34 @@ h1 {
     color: black;
     margin-left: 50px;
     border-radius: 5px;
-    margin-top: 20%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 2s;
+}
+
+#submitTime:hover {
+    background-color: rgb(184, 184, 184);
+}
+
+#submitTime:active {
+    background-color: rgb(82, 82, 82);
+}
+
+
+#videos {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+#videosToggle {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+}
+
+#shortsToggle {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
 }
 
 .toggle {
@@ -114,6 +142,14 @@ h1 {
     height: 30px;
 }
 
-.shorts {
+#shorts {
     grid-column: 1 / 2;
+    grid-row: 3 / 4;
 }
+
+#currentTime {
+    margin-top: 7px;
+    color: rgb(183, 182, 182);
+    font-size: 1rem;
+}
+

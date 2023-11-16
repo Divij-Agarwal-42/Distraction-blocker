@@ -1,5 +1,5 @@
 // These functions are being used by timerscript.js and landing_page.js
-export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site };
+export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site, set_timeout_settings, get_timeout_settings };
 
 // Storing value of timer value
 let set_timer = async (time) => {
@@ -12,6 +12,27 @@ let set_initial_url = async (the_url) => {
   await chrome.storage.local.set({ initial_url: the_url }).then(() => {
       console.log("Value is set");
   });
+}
+
+// Storing values for having timeout on shorts / videos
+let set_timeout_settings = async (enable_timeout, videos_status, shorts_status) => {
+  await chrome.storage.local.set({ e: enable_timeout, v: videos_status, s: shorts_status }).then(() => {
+      console.log("Value is set");
+  });
+}
+
+// Getting values for having timeout on shorts / videos
+async function get_timeout_settings() {
+  try {
+    let videos_status = await chrome.storage.local.get(["v"]);
+    let shorts_status = await chrome.storage.local.get(["s"]);
+    let enable_timeout = await chrome.storage.local.get(["e"]);
+
+    return {enable: enable_timeout.e, videos: videos_status.v, shorts: shorts_status.s};
+
+  } catch {
+    return "Error";
+  }
 }
 
 // Getting value for url
@@ -86,7 +107,10 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
     chrome.tabs.sendMessage(tabId, "reloaded");
   }
   
-  if (tab.url && (tab.url.includes("youtube.com/watch") || (tab.url.includes("youtube.com/shorts")))) {
+  get_timeout_settings().then((status_type) => {
+    if (tab.url && ((status_type.videos && tab.url.includes("youtube.com/watch")) || 
+      (status_type.shorts && tab.url.includes("youtube.com/shorts")))) {
+
       set_initial_url(tab.url);
 
       if ((blocked == 0) || (blocked == 1)) {
@@ -100,7 +124,8 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
         })
 
       }
-  }
+    }
+  })
   
   if (blocked == 2) {
     blocked = 0;
