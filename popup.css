@@ -1,14 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 body {
-    width: 200px;
-    height: 300px;
+    width: 120px;
+    height: 60px;
     background-color: #1a1818;
     
 }
 
 #goToLandingPage {
-    background-color: rgb(48, 47, 47);
+    background-color: #302f2f;
     padding: 5px;
     border-radius: 5px;
     font-family: "Roboto";
@@ -16,12 +16,13 @@ body {
     width: 100px;
     color: rgb(215, 213, 213);
     box-shadow: 2px 2px 2px 2px black;
-    transition: transform 0.3s;
-
+    transition: transform 0.2s;
+    margin: auto;
+    text-align: center;
 }
 
 #goToLandingPage:hover {
-    transform: translateY(-3%);
+    transform: translateY(-15px);
 }
 
 a {

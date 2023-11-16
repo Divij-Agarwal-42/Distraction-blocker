@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Distraction Blocker",
     "version": "1.0",
-    "description": "Destroy your addiction to sites like YouTube",
+    "description": "Destroy your Youtube addiction",
     "permissions": [
       "webRequest",
       "tabs",
