@@ -98,17 +98,12 @@ let get_timer = async function() {
 // Proceed button initiates this, goes back to video
 
 
-let initial_url;
+let blocked = 0;
 
 // Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
   console.log("BLocked value is", blocked);
-
-  if (last_video == true) {
-    console.log("Should close ?");
-    chrome.tabs.remove(tabId);
-  }
 
   if (tab.url && tab.url.includes("youtube.com")) {
     chrome.tabs.sendMessage(tabId, "reloaded");
@@ -132,11 +127,11 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
       }
     }
+
+    if (blocked == 2) {
+      blocked = 0;
+    }
   })
-  
-  if (blocked == 2) {
-    blocked = 0;
-  }
 
 
 })

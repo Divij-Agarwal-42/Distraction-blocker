@@ -57,6 +57,9 @@ if (timeoutSettings && timeoutcheckbox) {
 async function update_time() {
   try {
     let time_value = document.getElementById("timeInput").value
+    if (time_value == "" || time_value == null) {
+      time_value = "10"
+    }
     await set_timer(time_value);
     currentTime.innerText = currentTimeStartText + time_value;
   } catch {}
