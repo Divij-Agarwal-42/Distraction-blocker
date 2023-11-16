@@ -99,11 +99,6 @@ let get_timer = async function() {
 
 
 let initial_url;
-let last_video = false;
-
-function set_last_video() {
-  last_video = true;
-}
 
 // Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
