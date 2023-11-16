@@ -4,6 +4,10 @@ export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_
 
 // Storing value of timer value
 let set_timer = async (time) => {
+    if (time == "0") {
+      time = "1";
+    }
+
     await chrome.storage.local.set({ time_value: time }).then(() => {
         console.log("Value is set");
     });
@@ -67,36 +71,16 @@ let get_timer = async function() {
   try {
     let timer_promise = await chrome.storage.local.get(["time_value"])
     let value = timer_promise.time_value;
+
+    if (value == null) {
+      value = 10;
+    }
+
     return value;
   } catch {
     
   };
 }
-
-// Variable to prevent weird behaviour when user tries to leave when timer comes
-
-// Waiting for timer to complete basically
-// async function update_timer(initial_url) {
-
-//   try {
-
-//     let timer_promise = await chrome.storage.local.get(["time_value"])
-//     let value = timer_promise.time_value;
-//     // setTimeout(() => {
-//     //   console.log("Jeff")
-//     //   if (running == true) {
-//     //     chrome.tabs.update({ url: initial_url });
-//     //     running = false;
-//     //   }
-//     // }, value * 1000)
-
-//   } catch(msg) {
-//     console.log(msg);
-//   };
-// }
-
-// Proceed button initiates this, goes back to video
-
 
 let blocked = 0;
 
@@ -122,7 +106,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
         get_timer().then((value) => {
           setTimeout(() => {
             blocked = 2;
-          }, (value - 1) * 1000);
+          }, (value) * 1000);
         })
 
       }
@@ -151,3 +135,13 @@ async function going_back() {
     console.log("Error");
   }
 }
+
+chrome.runtime.onInstalled.addListener(function(details){
+
+  if(details.reason == "install"){
+    set_timeout_settings(true, true, true);
+    hide_stuff(true, true);
+    set_timer("10");
+  }
+
+});
