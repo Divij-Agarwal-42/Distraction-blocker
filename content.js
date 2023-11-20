@@ -16,7 +16,9 @@ var justDoIt = function (){
   let noti_element = document.querySelector(".notification-button-style-type-default");
   (noti_element) ? noti_element.remove() : null;
 
-  if ((window.location.href.indexOf("watch?v=") < 0) && (window.location.href.endsWith("youtube.com/"))) {
+  if ((window.location.href.indexOf("watch?v=") < 0) && 
+      ((window.location.href.endsWith("youtube.com/")) || (window.location.href == "https://www.youtube.com") || 
+      window.location.href.startsWith("https://www.youtube.com/?bp"))) {
     //let recommended_element = document.querySelector("#dismissable")
     reload_home();
     let side_menu = document.querySelector("#guide-content");
@@ -26,7 +28,7 @@ var justDoIt = function (){
         clearInterval(interval_id);
 
         if(toggle1){
-            primary.remove();
+          primary.style.display = "none";
             console.log("This is working as expecte")
             //recommended_element.style.display = "none";
         }
@@ -42,7 +44,7 @@ var justDoIt = function (){
     if (related_element != null && comments_element != null) {
         clearInterval(interval_id);
 
-        if(related_element && toggle2){
+        if(related_element && toggle1){
             related_element.parentElement.parentElement.style.display= "none";
         }
     
