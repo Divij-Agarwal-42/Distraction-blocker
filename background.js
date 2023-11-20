@@ -84,7 +84,7 @@ let get_timer = async function() {
 
 let blocked = 0;
 
-// Listening for changes in url
+//Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
   console.log("BLocked value is", blocked);

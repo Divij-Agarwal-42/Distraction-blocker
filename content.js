@@ -72,7 +72,7 @@ load_values();
 
 // Listen for whenever page reloads, then load values (load values calls justDoit())
 chrome.runtime.onMessage.addListener((obj, sender, response) => {
-  reload_counter = 0; 
+  reload_counter = 0;
     if (obj === "reloaded") {
         console.log("PAGE RELOADED, content.js thiss side")
         load_values();

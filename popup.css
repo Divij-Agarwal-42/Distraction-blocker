@@ -2,7 +2,7 @@
 
 body {
     width: 120px;
-    height: 60px;
+    height: 130px;
     background-color: #1a1818;
     
 }
@@ -19,6 +19,25 @@ body {
     transition: transform 0.2s;
     margin: auto;
     text-align: center;
+    margin-bottom: 15px;
+}
+
+#break {
+    background-color: #302f2f;
+    padding: 5px;
+    border-radius: 5px;
+    font-family: "Roboto";
+    font-size: 1rem;
+    width: 100px;
+    color: rgb(215, 213, 213);
+    box-shadow: 2px 2px 2px 2px black;
+    margin: auto;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+#break:hover {
+    transform: translateY(-2px);
 }
 
 #goToLandingPage:hover {
