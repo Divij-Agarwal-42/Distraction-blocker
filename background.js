@@ -1,6 +1,8 @@
 // These functions are being used by timerscript.js and landing_page.js
 
-export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site, set_timeout_settings, get_timeout_settings };
+export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site, 
+  set_timeout_settings, get_timeout_settings, set_break_settings, get_break_settings, start_break, set_break_hide_stuff, 
+  set_break_timeout };
 
 // Storing value of timer value
 let set_timer = async (time) => {
@@ -24,6 +26,13 @@ let set_timeout_settings = async (enable_timeout, videos_status, shorts_status) 
   await chrome.storage.local.set({ e: enable_timeout, v: videos_status, s: shorts_status }).then(() => {
       console.log("Value is set");
   });
+}
+
+// Set values for break settings (time and whether to quit youtube afterwards)
+let set_break_settings = async function(time_value, quit_automatically, currently_ongoing) {
+  await chrome.storage.local.set({ break_time: time_value, auto_quit: quit_automatically, ongoing: currently_ongoing }).then(() => {
+    console.log("Value is set");
+});
 }
 
 // Getting values for having timeout on shorts / videos
@@ -53,7 +62,20 @@ async function get_initial_url() {
 let hide_stuff = async (t1, t2) => {
   await chrome.storage.local.set({ hide_recs: t1, hide_coms: t2 }).then(() => {
     console.log("hidding is set");
-  });;
+  });
+}
+
+let set_break_hide_stuff = async (t1, t2) => {
+  await chrome.storage.local.set({ break_hide_recs: t1, break_hide_coms: t2 }).then(() => {
+    console.log("hidding is set");
+  });
+}
+
+let set_break_timeout = async (enable_timeout, videos_status, shorts_status, time) => {
+  await chrome.storage.local.set({ break_e: enable_timeout, break_v: videos_status, 
+      break_s: shorts_status, break_timeout_value: time }).then(() => {
+      console.log("Value is set");
+  });
 }
 
 // Fetching values from chrome storage
@@ -82,7 +104,21 @@ let get_timer = async function() {
   };
 }
 
+// Set values for break settings (time and whether to quit youtube afterwards)
+let get_break_settings = async function() {
+  let break_settings = await chrome.storage.local.get();
+  return break_settings;
+};
+
 let blocked = 0;
+let timerInterval;
+
+// When browser is opened (background first loads, any continuing break will be ended)
+(async function clearBreak() {
+  await chrome.storage.local.set({ ongoing: false }).then(() => {
+    console.log("Value is set");
+});
+})();
 
 //Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
@@ -122,7 +158,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
 // Close the site, open new tab, when exit is clicked on timer
 function close_site() {
-  blocked = false;
+  blocked = 0;
   chrome.tabs.create({ url: 'chrome://newtab' });
 }
 
@@ -142,6 +178,81 @@ chrome.runtime.onInstalled.addListener(function(details){
     set_timeout_settings(true, true, true);
     hide_stuff(true, true);
     set_timer("10");
+    set_break_settings(10, true, false);
   }
 
 });
+
+let recommendationsToggle = false;
+let commentsToggle = false;
+let enableTimoutToggle = false;
+let videosToggle = false;
+let shortsToggle = false;
+let remainingTime = 0;
+
+let updateTimer = function() {
+  remainingTime--;
+  console.log(remainingTime);
+  if (remainingTime <= 0) {
+    console.log("time is 0 moment detected, end break should be initiated");
+    end_break();
+    try {
+    clearInterval(timerInterval);
+    } catch {
+      // Nothing needs to be done
+    }
+  }
+}
+
+let start_break = async function(break_time_value) {
+  // Saving current settings so that they can be reverted to when break ends
+  recommendationsToggle = await get_hiding_values().t1;
+  commentsToggle = await get_hiding_values().t2;
+  enableTimoutToggle = await get_timeout_settings().enable;
+  videosToggle = await get_timeout_settings().videos;
+  shortsToggle = await get_timeout_settings().shorts;
+
+  // Disabling all settings
+  hide_stuff(false, false);
+  set_timeout_settings(false, false, false);
+
+  remainingTime = break_time_value * 60;
+
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  // Check if the message is a request for info
+  // if (request.action == "getTime") {
+  //   console.log("Requested time")
+
+  //   getCurrentBreakTime().then((value) => {
+  //     let current_break_time = value;
+  //     sendResponse(current_break_time);
+  //   });
+
+  // }
+  if (request.action == "start") {
+    start_break(request.value);
+  }
+});
+
+let end_break = async function() {
+  console.log("end break function is starting up")
+  await hide_stuff(recommendationsToggle, commentsToggle);
+  await set_timeout_settings(enableTimoutToggle, videosToggle, shortsToggle);
+  let break_settings = await get_break_settings();
+
+  if (break_settings.auto_quit == true) {
+    // Goes through each tab, closes all tabs containing youtube.com
+    chrome.tabs.query({}, function (tabs) {
+      tabs.forEach(function (tab) {
+        if (tab.url && tab.url.includes("youtube.com")) {
+          chrome.tabs.remove(tab.id);
+        }
+      });
+    });
+  }
+
+  set_break_settings(break_settings.break_time, break_settings.break_time.auto_quit, false);
+}

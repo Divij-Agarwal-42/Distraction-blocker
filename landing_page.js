@@ -1,4 +1,5 @@
-import { set_timer, hide_stuff, get_hiding_values, get_timer, set_timeout_settings, get_timeout_settings } from "./background.js";
+import { set_timer, hide_stuff, get_hiding_values, get_timer, set_timeout_settings, 
+    get_timeout_settings, get_break_settings } from "./background.js";
 
 // Hiding timeout settings based on Enable timeout
 let timeoutSettings = document.getElementById("timeoutSettings")
@@ -8,6 +9,16 @@ let videosToggle = document.getElementById("videosToggle")
 let shortsToggle = document.getElementById("shortsToggle")
 
 const currentTimeStartText = "Time set to: "
+
+// Hides settings if a break is underway
+get_break_settings().then(breakSettings => {
+  if (breakSettings.ongoing) {
+    document.querySelector("h1").innerText = "Break underway, change settings later";
+    // Hides all settings
+    document.getElementById("mainGrid").style.visibility = "hidden";
+    document.querySelector("#ytLogo").style.visibility = "hidden";
+  }
+});
 
 if (timeoutSettings && timeoutcheckbox) {
   timeoutcheckbox.addEventListener("change", (event) => {
@@ -95,7 +106,7 @@ document.getElementById("timeInput").addEventListener("input", function (event) 
 
 })
 
-function update_timeout_settings() {
+async function update_timeout_settings() {
   let video_toggle = false;
   let shorts_toggle = false;
   let enable_timeout = timeoutcheckbox.checked;

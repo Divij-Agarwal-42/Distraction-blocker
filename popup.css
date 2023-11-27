@@ -1,10 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 body {
-    width: 120px;
-    height: 130px;
+    width: 200px;
+    height: 300px;
     background-color: #1a1818;
-    
+    color: rgb(215, 213, 213);
+    font-family: "Roboto";
+    font-size: 1rem;
 }
 
 #goToLandingPage {
@@ -48,3 +50,62 @@ a {
     text-decoration: none;
 }
 
+#timeSettings {
+    margin: auto;
+    margin-top: 15px;
+    text-align: center;
+    background-color: rgb(46, 43, 43);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#timeText {
+    margin-bottom: 10px;
+}
+
+#timeInput {
+    height: 1.5rem;
+    width: 50px;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 5px; 
+    position: relative;
+    bottom: 10px;
+    padding-left: 7px;
+}
+
+#submitTime {
+    width: auto;
+    height: 1.5rem;
+    background-color: grey;
+    color: black;
+    border-radius: 5px;
+    position: relative;
+    bottom: 3px;
+}
+
+#submitTime:hover {
+    background-color: rgb(184, 184, 184);
+}
+
+#submitTime:active {
+    background-color: rgb(82, 82, 82);
+}
+
+#currentTime {
+    color: rgb(152, 149, 149);
+}
+
+#quitYt {
+    text-align: center;
+    margin-top: 20px;
+    background-color: rgb(46, 43, 43);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#quitInput {
+    width: 20px;
+    height: 20px;
+}
