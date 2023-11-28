@@ -14,7 +14,7 @@ timeSettings.style.visibility = "hidden";
 quitYt.style.visibility = "hidden";
 
 function currentTimeText(new_time) {
-  currentTime.innerText = "Settings will be disabled for: " + new_time + " min";
+  currentTime.innerText = "Break settings will be applied for: " + new_time + " min";
   break_time_value = Number(new_time);
 }
 
@@ -137,7 +137,7 @@ document.getElementById("break").addEventListener("click", async function (event
     quitYt.style.visibility = "hidden";
     await set_break_settings(break_time_value, document.getElementById("quitInput").checked, true);
 
-    document.getElementById("break").style.backgroundColor = "#B0301F"
+    document.getElementById("break").style.backgroundColor = "#B0301F";
     document.getElementById("break").style.color = "white";
     breakStatus = 2;
     chrome.runtime.sendMessage({action: "start", value: break_time_value});

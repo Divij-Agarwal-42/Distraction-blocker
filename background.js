@@ -2,7 +2,7 @@
 
 export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site, 
   set_timeout_settings, get_timeout_settings, set_break_settings, get_break_settings, start_break, set_break_hide_stuff, 
-  set_break_timeout };
+  set_break_timeout, set_break_timeout_time };
 
 // Storing value of timer value
 let set_timer = async (time) => {
@@ -71,9 +71,18 @@ let set_break_hide_stuff = async (t1, t2) => {
   });
 }
 
-let set_break_timeout = async (enable_timeout, videos_status, shorts_status, time) => {
-  await chrome.storage.local.set({ break_e: enable_timeout, break_v: videos_status, 
-      break_s: shorts_status, break_timeout_value: time }).then(() => {
+let set_break_timeout = async (enable_timeout, videos_status, shorts_status) => {
+  await chrome.storage.local.set({ break_e: enable_timeout, break_v: videos_status, break_s: shorts_status }).then(() => {
+      console.log("Value is set");
+  });
+}
+
+let set_break_timeout_time = async (time) => {
+  if (time == "0") {
+    time = "1";
+  }
+
+  await chrome.storage.local.set({ break_timeout_time: time }).then(() => {
       console.log("Value is set");
   });
 }
@@ -113,7 +122,7 @@ let get_break_settings = async function() {
 let blocked = 0;
 let timerInterval;
 
-// When browser is opened (background first loads, any continuing break will be ended)
+// When browser is opened (background first loads, any previous break will be ended)
 (async function clearBreak() {
   await chrome.storage.local.set({ ongoing: false }).then(() => {
     console.log("Value is set");
@@ -175,10 +184,15 @@ async function going_back() {
 chrome.runtime.onInstalled.addListener(function(details){
 
   if(details.reason == "install"){
+    // Setting default values
     set_timeout_settings(true, true, true);
     hide_stuff(true, true);
     set_timer("10");
     set_break_settings(10, true, false);
+
+    set_break_hide_stuff(false, false);
+    set_break_timeout(false, false);
+    set_break_timeout_time("10");
   }
 
 });

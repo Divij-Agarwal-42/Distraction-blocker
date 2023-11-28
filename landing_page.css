@@ -23,15 +23,16 @@ h1 {
     margin: auto;
     height: auto;
     border-radius: 15px;
-    margin-bottom: 5px;
+    margin-bottom: 25px;
     margin-top: 1%;
 }
 
 #mainGrid {
     display: grid;
-    grid-template-rows: 1fr 100px 1fr;
+    grid-template-rows: 1fr 100px 1fr 100px;
     grid-template-columns: repeat(5, 1fr);
     gap: 5%;
+    margin-top: 40px;
 }
 
 .gridParent {
@@ -153,3 +154,26 @@ h1 {
     font-size: 1rem;
 }
 
+a {
+    text-decoration: none;
+}
+
+#breakSettings {
+    background-color: rgba(255, 255, 255, 0.875);
+    padding: 10px;
+    border-radius: 5px;
+    font-family: "Roboto";
+    font-size: 1rem;
+    width: 200px;
+    color: black;
+    box-shadow: 2px 2px 2px 2px black;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+#breakSettings:hover {
+    background-color: rgb(116, 116, 116);
+}
