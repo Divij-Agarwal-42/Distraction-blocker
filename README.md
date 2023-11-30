@@ -24,6 +24,6 @@ To reduce the addictive nature of YouTube videos and shorts, the extension provi
 ###  Break Feature
 
 Need a break from the distraction blocker? The extension includes a break feature that allows you to temporarily disable the settings. 
-During this break, you can relax, study, or simply chill out without the restrictions. You can also set custom break durations and configurations.
+During this break, you can study or simply chill out without the restrictions. You can also set custom break durations and configurations.
 
 Feel free to contribute, report issues, or suggest improvements!
