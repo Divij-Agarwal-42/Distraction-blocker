@@ -4,8 +4,8 @@
 
 1) Clone this repository on your local machine
 2) Open Chrome or Brave browser
-3) Go to the Extensions page by clicking on the three dots in the top right corner and selecting "Extensions" -> "Manage extensions."
-   <img width="488" alt="Screenshot 2023-11-29 at 10 05 42 PM" src="https://github.com/Divij-Agarwal-42/Distraction-blocker/assets/105697019/b1ef9f47-36dc-44da-be92-65b808549a52">
+3) Go to the Extensions page by clicking on the three dots in the top right corner and selecting "Extensions" -> "Manage extensions."<br>
+   <img width="488" alt="Screenshot 2023-11-29 at 10 05 42 PM" src="https://github.com/Divij-Agarwal-42/Distraction-blocker/assets/105697019/b1ef9f47-36dc-44da-be92-65b808549a52"><br>
 4) Turn on Developer Mode by toggling the switch in the top right corner.
 5) Click on "Load unpacked" present in the top left corner.
 6) Select the downloaded folder.
