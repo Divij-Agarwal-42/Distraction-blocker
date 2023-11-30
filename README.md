@@ -2,7 +2,7 @@
 
 ## Installation
 
-1) Clone this repository on your local machine
+1) Clone this repository on your local machine. Alternatively, [click here to download directly](https://github.com/Divij-Agarwal-42/Distraction-blocker/archive/refs/tags/alpha.zip)
 2) Open Chrome or Brave browser
 3) Go to the Extensions page by clicking on the three dots in the top right corner and selecting "Extensions" -> "Manage extensions."
    <br>
