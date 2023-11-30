@@ -19,7 +19,7 @@ The extension provides a distraction-free browsing experience by allowing you to
 
 ### Timeout Feature
 
-To reduce the addictive nature of YouTube videos and shorts, the extension provides a timeout feature. It also helps in preventing infinite scrolling through shorts.
+To reduce the addictive nature of YouTube videos and shorts, the extension provides a timeout feature. It also helps in preventing you from endlessly scrolling YouTube shorts.
 
 ###  Break Feature
 
