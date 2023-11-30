@@ -8,7 +8,6 @@ let breakStatus = 0 // 0 means not started, 1 means started, 2 means it is ongoi
 let get_break_time = 0;
 let remainingTime = 0;
 let timerInterval;
-
 // Settings are hidden by default, only visible when "enable break" is pressed
 timeSettings.style.visibility = "hidden";
 quitYt.style.visibility = "hidden";
@@ -18,7 +17,7 @@ function currentTimeText(new_time) {
   break_time_value = Number(new_time);
 }
 
-get_break_settings().then(breakSettings => {
+chrome.storage.local.get().then(breakSettings => {
   currentTimeText(breakSettings.break_time);
 });
 
@@ -40,11 +39,13 @@ function formatTime(seconds) {
   const hours = Math.floor(seconds / 3600);
   const remainingSeconds = seconds % 3600;
   const minutes = Math.floor(remainingSeconds / 60);
+  const seconds2 = seconds - (minutes * 60) - (hours * 3600);
   
   const formattedHours = String(hours).padStart(2, '0');
   const formattedMinutes = String(minutes).padStart(2, '0');
-  
-  return `${formattedHours}:${formattedMinutes}`;
+  const formattedSeconds = String(seconds2).padStart(2, '0');
+
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
 function updateTimer(dontReduceTime = false) {
@@ -72,12 +73,13 @@ function updateTimer(dontReduceTime = false) {
 
 
 // On start of popup, checks whether break is ongoing or not
-get_break_settings().then(breakSettings => {
+chrome.storage.local.get().then(breakSettings => {
+  console.log("ongoing value, popup: ", breakSettings.ongoing);
   if (breakSettings.ongoing) {
     if (checkRemainingTime() < (breakSettings.break_time * 60)) {
       breakStatus = 2;
       remainingTime = (breakSettings.break_time * 60) - checkRemainingTime();
-      updateTimer(true); // Just for getting the time value, doesn't affect time
+      updateTimer();
 
       console.log("break time value: ", breakSettings.break_time);
       console.log("check remaining time function", checkRemainingTime())
@@ -100,8 +102,8 @@ document.getElementById("timeInput").addEventListener("input", function (event) 
   let numericInput = input.replace(/[^0-9]/g, '');
 
   // Limit the input to 3 digits
-  if (numericInput.length > 4) {
-    numericInput = numericInput.slice(0, 4);
+  if (numericInput.length > 3) {
+    numericInput = numericInput.slice(0, 3);
   }
 
   event.target.value = numericInput;

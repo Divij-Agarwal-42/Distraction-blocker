@@ -7,7 +7,7 @@ let currentTime = document.getElementById("currentTime");
 let timeoutcheckbox = document.getElementById("timeoutcheckbox");
 let videosToggle = document.getElementById("videosToggle");
 let shortsToggle = document.getElementById("shortsToggle");
-let breakSettings = document.getElementById("breakSettings");
+let breakSettingsButton = document.getElementById("breakSettings");
 
 const currentTimeStartText = "Time set to: "
 
@@ -18,6 +18,7 @@ get_break_settings().then(breakSettings => {
     // Hides all settings
     document.getElementById("mainGrid").style.visibility = "hidden";
     document.querySelector("#ytLogo").style.visibility = "hidden";
+    breakSettingsButton.style.visibility = "hidden";
   }
 });
 
@@ -159,19 +160,19 @@ async function load_all_break_settings() {
 }
 
 let break_settings_status = 0 // 0 means program is showing main settings currently, 1 means it's showing break settings
-breakSettings.addEventListener("click", function (event) {
+breakSettingsButton.addEventListener("click", function (event) {
   console.log("hi//??")
   if (break_settings_status == 0) { // Will now show break settings
     break_settings_status = 1;
     document.querySelector("h1").innerText = "Break settings";
-    breakSettings.innerText = "Show main settings"
+    breakSettingsButton.innerText = "Show main settings"
     load_all_break_settings();
     document.body.style.backgroundColor = "#272a36";
 
   } else if (break_settings_status == 1) { // Will now show main settings
     break_settings_status = 0;
     document.querySelector("h1").innerText = "Distraction Blocker Settings";
-    breakSettings.innerText = "Show break settings"
+    breakSettingsButton.innerText = "Show break settings"
     document.body.style.backgroundColor = "rgb(22, 22, 22)";
     load_values();
     load_time();

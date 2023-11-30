@@ -20,7 +20,6 @@ let set_initial_url = async (the_url) => {
       console.log("Value is set");
   });
 }
-
 // Storing values for having timeout on shorts / videos
 let set_timeout_settings = async (enable_timeout, videos_status, shorts_status) => {
   await chrome.storage.local.set({ e: enable_timeout, v: videos_status, s: shorts_status }).then(() => {
@@ -88,7 +87,7 @@ let set_break_timeout_time = async (time) => {
 }
 
 // Fetching values from chrome storage
-async function get_hiding_values(toggle1, toggle2) {
+async function get_hiding_values() {
     try {
       let hidden_recs = await chrome.storage.local.get(["hide_recs"]);
       let hidden_comms = await chrome.storage.local.get(["hide_coms"]);
@@ -119,15 +118,25 @@ let get_break_settings = async function() {
   return break_settings;
 };
 
+function close_all_tabs(close_this_link) {
+  chrome.tabs.query({}, function (tabs) {
+    tabs.forEach(function (tab) {
+      if (tab.url && tab.url.includes(close_this_link)) {
+        chrome.tabs.remove(tab.id);
+      }
+    });
+  });
+}
+
 let blocked = 0;
 let timerInterval;
 
 // When browser is opened (background first loads, any previous break will be ended)
-(async function clearBreak() {
-  await chrome.storage.local.set({ ongoing: false }).then(() => {
+chrome.runtime.onStartup.addListener(() => {
+  chrome.storage.local.set({ ongoing: false }).then(() => {
     console.log("Value is set");
+  });
 });
-})();
 
 //Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
@@ -207,6 +216,9 @@ let remainingTime = 0;
 let updateTimer = function() {
   remainingTime--;
   console.log(remainingTime);
+  get_break_settings().then((value) => {
+    console.log(("ongoing value is: ", value.ongoing));
+  })
   if (remainingTime <= 0) {
     console.log("time is 0 moment detected, end break should be initiated");
     end_break();
@@ -220,16 +232,21 @@ let updateTimer = function() {
 
 let start_break = async function(break_time_value) {
   // Saving current settings so that they can be reverted to when break ends
-  recommendationsToggle = await get_hiding_values().t1;
-  commentsToggle = await get_hiding_values().t2;
-  enableTimoutToggle = await get_timeout_settings().enable;
-  videosToggle = await get_timeout_settings().videos;
-  shortsToggle = await get_timeout_settings().shorts;
+  let hidding_values = await get_hiding_values();
+  recommendationsToggle = hidding_values.t1;
+  console.log("Recommendations toggle", recommendationsToggle);
+  commentsToggle = hidding_values.t2;
 
+  let timeout_settings = await get_timeout_settings();
+  enableTimoutToggle = timeout_settings.enable;
+  videosToggle = timeout_settings.videos;
+  shortsToggle = timeout_settings.shorts;
+  let break_settings = await get_break_settings();
+  console.log("Break started, ongoing valu: ", break_settings.ongoing)
   // Disabling all settings
-  hide_stuff(false, false);
-  set_timeout_settings(false, false, false);
-
+  hide_stuff(break_settings.break_hide_recs, break_settings.break_hide_coms);
+  set_timeout_settings(break_settings.break_e, break_settings.break_v, break_settings.break_s);
+  close_all_tabs(chrome.runtime.getURL("landing_page.html"));
   remainingTime = break_time_value * 60;
 
   timerInterval = setInterval(updateTimer, 1000);
@@ -253,19 +270,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 let end_break = async function() {
   console.log("end break function is starting up")
+  console.log("Rec toggle", recommendationsToggle, "comments", commentsToggle, "enable timeo", enableTimoutToggle
+    , "video togg", videosToggle, "shorts toggle", shortsToggle);
   await hide_stuff(recommendationsToggle, commentsToggle);
   await set_timeout_settings(enableTimoutToggle, videosToggle, shortsToggle);
   let break_settings = await get_break_settings();
 
   if (break_settings.auto_quit == true) {
     // Goes through each tab, closes all tabs containing youtube.com
-    chrome.tabs.query({}, function (tabs) {
-      tabs.forEach(function (tab) {
-        if (tab.url && tab.url.includes("youtube.com")) {
-          chrome.tabs.remove(tab.id);
-        }
-      });
-    });
+    close_all_tabs("youtube.com");
   }
 
   set_break_settings(break_settings.break_time, break_settings.break_time.auto_quit, false);
