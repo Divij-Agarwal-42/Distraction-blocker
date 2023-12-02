@@ -143,8 +143,17 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
   console.log("BLocked value is", blocked);
 
+  // if (tab.url && tab.url.includes("youtube.com")) {
+  //   chrome.tabs.sendMessage(tabId, "reloaded");
+  //   console.log(tabId);
+  // }
+
   if (tab.url && tab.url.includes("youtube.com")) {
-    chrome.tabs.sendMessage(tabId, "reloaded");
+    chrome.tabs.sendMessage(tabId, "reloaded", function(response) {
+      if (chrome.runtime.lastError) {
+          // Ignore as this usually occurs just the first time
+      }
+    });
   }
   
   get_timeout_settings().then((status_type) => {
