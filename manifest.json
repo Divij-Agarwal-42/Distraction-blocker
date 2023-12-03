@@ -4,7 +4,6 @@
     "version": "1.0",
     "description": "Hides YouTube recommendations, comments and has a time out feature",
     "permissions": [
-      "webRequest",
       "tabs",
       "storage",
       "activeTab"
