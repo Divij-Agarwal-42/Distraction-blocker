@@ -5,8 +5,7 @@
     "description": "Chrome extension that tries to curb YouTube addiction without blocking YouTube completely",
     "permissions": [
       "tabs",
-      "storage",
-      "activeTab"
+      "storage"
     ],
 
     "action": {
