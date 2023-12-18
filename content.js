@@ -20,7 +20,9 @@ var justDoIt = function (){
       ((window.location.href.endsWith("youtube.com/")) || (window.location.href == "https://www.youtube.com") || 
       window.location.href.startsWith("https://www.youtube.com/?bp"))) {
     //let recommended_element = document.querySelector("#dismissable")
-    reload_home();
+    if (!toggle1) {
+      reload_home();
+    }
     let side_menu = document.querySelector("#guide-content");
     let primary = document.querySelector("#primary");
 
