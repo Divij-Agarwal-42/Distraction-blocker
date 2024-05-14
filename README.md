@@ -2,7 +2,7 @@
 
 ## Installation
 
-### [Chrome web store](https://chromewebstore.google.com/detail/distraction-blocker/eecjekolchpdhmjenpbgdakkabnmhpfi?hl=en)
+### [Install directly from Chrome web store](https://chromewebstore.google.com/detail/distraction-blocker/eecjekolchpdhmjenpbgdakkabnmhpfi?hl=en)
 
 1) Clone this repository on your local machine. Alternatively, [click here to download directly](https://github.com/Divij-Agarwal-42/Distraction-blocker/archive/refs/tags/alpha.zip)
 2) Open Chrome or Brave browser
