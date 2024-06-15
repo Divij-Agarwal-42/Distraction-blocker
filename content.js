@@ -1,3 +1,7 @@
+
+// toggle1 is whether the recommendations need to be hidden or not
+// toggle2 is the same as toggle1 but for comments
+
 let toggle1 = true;
 let toggle2 = true;
 
@@ -10,19 +14,28 @@ function reload_home() {
     reload_counter++;
   }
 }
-// hide recommendations, comments
+
+// Hide recommendations and comments
 var justDoIt = function (){
 
   let noti_element = document.querySelector(".notification-button-style-type-default");
-  (noti_element) ? noti_element.remove() : null;
 
-  if ((window.location.href.indexOf("watch?v=") < 0) && 
-      ((window.location.href.endsWith("youtube.com/")) || (window.location.href == "https://www.youtube.com") || 
+  if (noti_element) {
+    noti_element.remove()
+  }
+
+  // Checking if the url
+  if ((window.location.href.indexOf("watch?v=") < 0) &&
+      ((window.location.href.endsWith("youtube.com/")) || (window.location.href == "https://www.youtube.com") ||
       window.location.href.startsWith("https://www.youtube.com/?bp"))) {
-    //let recommended_element = document.querySelector("#dismissable")
+
     if (!toggle1) {
       reload_home();
     }
+
+    // side_menu is the side bar element on YouTube's website (showing the user's subscriptions etc)
+    // primary is the element that contains all the recommended videos on the home page
+
     let side_menu = document.querySelector("#guide-content");
     let primary = document.querySelector("#primary");
 
@@ -49,7 +62,7 @@ var justDoIt = function (){
         if(related_element && toggle1){
             related_element.parentElement.parentElement.style.display= "none";
         }
-    
+
         if(comments_element && toggle2){
             comments_element.style.display = "none";
         }

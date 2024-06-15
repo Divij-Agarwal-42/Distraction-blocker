@@ -22,21 +22,20 @@
         "48": "reading-time_images/icon-48.png",
         "128": "reading-time_images/icon-128.png"
       },
-    
+
     "background": {
       "service_worker": "background.js",
       "type": "module"
     },
-      
+
     "content_scripts": [
         {
           "matches": [
-            "https://www.youtube.com/*"
+            "*://www.youtube.com/*"
           ],
           "js": ["content.js"]
         }
       ]
-    
+
 
 }
-  
