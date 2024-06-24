@@ -1,3 +1,4 @@
+// The code here runs whenever any YouTube's subdomain is loaded
 
 // toggle1 is whether the recommendations need to be hidden or not, true means they need to be hidden
 // toggle2 is the same as toggle1 but for comments
@@ -79,7 +80,6 @@ async function load_values() {
     let hidden_comms = await chrome.storage.local.get(["hide_coms"]);
     toggle1 = hidden_recs.hide_recs;
     toggle2 = hidden_comms.hide_coms;
-    console.log(toggle1, toggle2);
 
     // repeatedly tries to find elements every 100 ms to hide them
     interval_id = setInterval(function () {justDoIt()}, 100);
@@ -91,7 +91,6 @@ load_values();
 chrome.runtime.onMessage.addListener((obj, sender, response) => {
   reload_counter = 0;
     if (obj === "reloaded") {
-        console.log("PAGE RELOADED, content.js thiss side")
         load_values();
     }
 })

@@ -1,7 +1,7 @@
 // These functions are being used by timerscript.js and landing_page.js
 
-export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site, 
-  set_timeout_settings, get_timeout_settings, set_break_settings, get_break_settings, start_break, set_break_hide_stuff, 
+export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site,
+  set_timeout_settings, get_timeout_settings, set_break_settings, get_break_settings, start_break, set_break_hide_stuff,
   set_break_timeout, set_break_timeout_time };
 
 // Storing value of timer value
@@ -10,28 +10,22 @@ let set_timer = async (time) => {
       time = "1";
     }
 
-    await chrome.storage.local.set({ time_value: time }).then(() => {
-        console.log("Value is set");
-    });
+    await chrome.storage.local.set({ time_value: time })
 }
+
 // Setting value for url
 let set_initial_url = async (the_url) => {
-  await chrome.storage.local.set({ initial_url: the_url }).then(() => {
-      console.log("Value is set");
-  });
+  await chrome.storage.local.set({ initial_url: the_url })
 }
+
 // Storing values for having timeout on shorts / videos
 let set_timeout_settings = async (enable_timeout, videos_status, shorts_status) => {
-  await chrome.storage.local.set({ e: enable_timeout, v: videos_status, s: shorts_status }).then(() => {
-      console.log("Value is set");
-  });
+  await chrome.storage.local.set({ e: enable_timeout, v: videos_status, s: shorts_status })
 }
 
 // Set values for break settings (time and whether to quit youtube afterwards)
 let set_break_settings = async function(time_value, quit_automatically, currently_ongoing) {
-  await chrome.storage.local.set({ break_time: time_value, auto_quit: quit_automatically, ongoing: currently_ongoing }).then(() => {
-    console.log("Value is set");
-});
+  await chrome.storage.local.set({ break_time: time_value, auto_quit: quit_automatically, ongoing: currently_ongoing })
 }
 
 // Getting values for having timeout on shorts / videos
@@ -59,21 +53,15 @@ async function get_initial_url() {
 }
 // Storing value of hiding recommendations and hiding comments (true / false)
 let hide_stuff = async (t1, t2) => {
-  await chrome.storage.local.set({ hide_recs: t1, hide_coms: t2 }).then(() => {
-    console.log("hidding is set");
-  });
+  await chrome.storage.local.set({ hide_recs: t1, hide_coms: t2 })
 }
 
 let set_break_hide_stuff = async (t1, t2) => {
-  await chrome.storage.local.set({ break_hide_recs: t1, break_hide_coms: t2 }).then(() => {
-    console.log("hidding is set");
-  });
+  await chrome.storage.local.set({ break_hide_recs: t1, break_hide_coms: t2 })
 }
 
 let set_break_timeout = async (enable_timeout, videos_status, shorts_status) => {
-  await chrome.storage.local.set({ break_e: enable_timeout, break_v: videos_status, break_s: shorts_status }).then(() => {
-      console.log("Value is set");
-  });
+  await chrome.storage.local.set({ break_e: enable_timeout, break_v: videos_status, break_s: shorts_status })
 }
 
 let set_break_timeout_time = async (time) => {
@@ -81,9 +69,7 @@ let set_break_timeout_time = async (time) => {
     time = "1";
   }
 
-  await chrome.storage.local.set({ break_timeout_time: time }).then(() => {
-      console.log("Value is set");
-  });
+  await chrome.storage.local.set({ break_timeout_time: time })
 }
 
 // Fetching values from chrome storage
@@ -96,6 +82,7 @@ async function get_hiding_values() {
       return "Error";
     }
 }
+
 // Getting timer value
 let get_timer = async function() {
   try {
@@ -155,9 +142,9 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
       }
     });
   }
-  
+
   get_timeout_settings().then((status_type) => {
-    if (tab.url && ((status_type.videos && tab.url.includes("youtube.com/watch")) || 
+    if (tab.url && ((status_type.videos && tab.url.includes("youtube.com/watch")) ||
       (status_type.shorts && tab.url.includes("youtube.com/shorts")))) {
 
       set_initial_url(tab.url);
