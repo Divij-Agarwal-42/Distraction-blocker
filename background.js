@@ -28,6 +28,27 @@ let set_break_settings = async function(time_value, quit_automatically, currentl
   await chrome.storage.local.set({ break_time: time_value, auto_quit: quit_automatically, ongoing: currently_ongoing })
 }
 
+// Storing value of hiding recommendations and hiding comments (true / false)
+let hide_stuff = async (t1, t2) => {
+  await chrome.storage.local.set({ hide_recs: t1, hide_coms: t2 })
+}
+
+let set_break_hide_stuff = async (t1, t2) => {
+  await chrome.storage.local.set({ break_hide_recs: t1, break_hide_coms: t2 })
+}
+
+let set_break_timeout = async (enable_timeout, videos_status, shorts_status) => {
+  await chrome.storage.local.set({ break_e: enable_timeout, break_v: videos_status, break_s: shorts_status })
+}
+
+let set_break_timeout_time = async (time) => {
+  if (time == "0") {
+    time = "1";
+  }
+
+  await chrome.storage.local.set({ break_timeout_time: time })
+}
+
 // Getting values for having timeout on shorts / videos
 async function get_timeout_settings() {
   try {
@@ -50,26 +71,6 @@ async function get_initial_url() {
   } catch {
     return "Error";
   }
-}
-// Storing value of hiding recommendations and hiding comments (true / false)
-let hide_stuff = async (t1, t2) => {
-  await chrome.storage.local.set({ hide_recs: t1, hide_coms: t2 })
-}
-
-let set_break_hide_stuff = async (t1, t2) => {
-  await chrome.storage.local.set({ break_hide_recs: t1, break_hide_coms: t2 })
-}
-
-let set_break_timeout = async (enable_timeout, videos_status, shorts_status) => {
-  await chrome.storage.local.set({ break_e: enable_timeout, break_v: videos_status, break_s: shorts_status })
-}
-
-let set_break_timeout_time = async (time) => {
-  if (time == "0") {
-    time = "1";
-  }
-
-  await chrome.storage.local.set({ break_timeout_time: time })
 }
 
 // Fetching values from chrome storage
@@ -120,21 +121,14 @@ let timerInterval;
 
 // When browser is opened (background first loads, any previous break will be ended)
 chrome.runtime.onStartup.addListener(() => {
-  chrome.storage.local.set({ ongoing: false }).then(() => {
-    console.log("Value is set");
-  });
+  chrome.storage.local.set({ ongoing: false })
 });
 
 //Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
-  console.log("BLocked value is", blocked);
-
-  // if (tab.url && tab.url.includes("youtube.com")) {
-  //   chrome.tabs.sendMessage(tabId, "reloaded");
-  //   console.log(tabId);
-  // }
-
+  // Basically tells content script to work whenever there's a page change
+  // This is needed for page reloads etc
   if (tab.url && tab.url.includes("youtube.com")) {
     chrome.tabs.sendMessage(tabId, "reloaded", function(response) {
       if (chrome.runtime.lastError) {
@@ -144,6 +138,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
   }
 
   get_timeout_settings().then((status_type) => {
+    // Checking to see if the timer page needs to be shown
     if (tab.url && ((status_type.videos && tab.url.includes("youtube.com/watch")) ||
       (status_type.shorts && tab.url.includes("youtube.com/shorts")))) {
 
@@ -179,7 +174,6 @@ function close_site() {
 async function going_back() {
   try {
     let url_received = await get_initial_url();
-    console.log(url_received);
     chrome.tabs.update({ url : url_received });
   } catch {
     console.log("Error");
@@ -230,7 +224,6 @@ let start_break = async function(break_time_value) {
   // Saving current settings so that they can be reverted to when break ends
   let hidding_values = await get_hiding_values();
   recommendationsToggle = hidding_values.t1;
-  console.log("Recommendations toggle", recommendationsToggle);
   commentsToggle = hidding_values.t2;
 
   let timeout_settings = await get_timeout_settings();
@@ -238,11 +231,9 @@ let start_break = async function(break_time_value) {
   videosToggle = timeout_settings.videos;
   shortsToggle = timeout_settings.shorts;
   let break_settings = await get_break_settings();
-  console.log("Break started, ongoing valu: ", break_settings.ongoing)
   // Disabling all settings
   hide_stuff(break_settings.break_hide_recs, break_settings.break_hide_coms);
   set_timeout_settings(break_settings.break_e, break_settings.break_v, break_settings.break_s);
-  close_all_tabs(chrome.runtime.getURL("landing_page.html"));
   remainingTime = break_time_value * 60;
 
   timerInterval = setInterval(updateTimer, 1000);

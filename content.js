@@ -30,6 +30,7 @@ var justDoIt = function (){
       ((window.location.href.endsWith("youtube.com/")) || (window.location.href == "https://www.youtube.com") ||
       window.location.href.startsWith("https://www.youtube.com/?bp"))) {
 
+    // 	body > ytd-app #content > ytd-page-manager, remove this element in subscription feed
     if (!toggle1) {
       reload_home();
     }
@@ -51,22 +52,36 @@ var justDoIt = function (){
         }
     }
 
-  } else { // This means that the user is watching a video
+  } else { // This means that the user is watching a video / short
 
-    //related_element refers to the recommended videos shown on the side
-    let related_element = document.querySelector('#related').querySelector("#items");
-    let comments_element = document.querySelector("#comments")
+    // User watching a short
+    if (window.location.href.includes("youtube.com/shorts")) {
+      let all_comment_buttons = document.querySelectorAll('#comments-button')
 
-    if (related_element != null && comments_element != null) {
+      if (!toggle2) {
         clearInterval(interval_id);
+      }
+      else if (all_comment_buttons && toggle2) {
+        clearInterval(interval_id);
+        all_comment_buttons.forEach(element => element.remove());
+      }
 
-        if(related_element && toggle1){
-            related_element.parentElement.parentElement.style.display= "none";
-        }
+    } else { // User watching a video
+      //related_element refers to the recommended videos shown on the side
+      let related_element = document.querySelector('#related').querySelector("#items");
+      let comments_element = document.querySelector("#comments")
 
-        if(comments_element && toggle2){
-            comments_element.style.display = "none";
-        }
+      if (related_element != null && comments_element != null) {
+          clearInterval(interval_id);
+
+          if(related_element && toggle1){
+              related_element.parentElement.parentElement.style.display= "none";
+          }
+
+          if(comments_element && toggle2){
+              comments_element.style.display = "none";
+          }
+      }
     }
 
   }
@@ -82,7 +97,7 @@ async function load_values() {
     toggle2 = hidden_comms.hide_coms;
 
     // repeatedly tries to find elements every 100 ms to hide them
-    interval_id = setInterval(function () {justDoIt()}, 100);
+    interval_id = setInterval(function () {justDoIt()}, 30);
   } catch {}
 };
 load_values();
