@@ -46,6 +46,46 @@ var justDoIt = function (){
 
         if(toggle1){
           primary.style.display = "none";
+
+          let sign_post = document.createElement('span');
+          sign_post.textContent = "Recommendations are hidden";
+          sign_post.style.position = "absolute";
+          sign_post.style.padding = "10px";
+          sign_post.style.fontSize = "1.2em";
+          sign_post.style.borderRadius = "15px";
+          sign_post.style.backgroundColor = "Silver";
+          sign_post.style.color = "black";
+          sign_post.style.left = "50%";
+          sign_post.style.top = "20%";
+          sign_post.style.transform = "translateX(-50%)";
+          sign_post.style.textAlign = "center";
+
+          let lineBreak = document.createElement('br');
+          let link = document.createElement('span');
+          link.textContent = "Settings";
+          link.style.cursor = "pointer";
+          link.style.color = "DimGray";
+          link.style.textDecoration = "underline";
+
+          sign_post.appendChild(lineBreak);
+          sign_post.appendChild(link);
+          document.body.appendChild(sign_post);
+
+          link.addEventListener('mouseenter', function(event) {
+            link.style.opacity = 0.8;
+          });
+
+          link.addEventListener('mouseleave', function(event) {
+              link.style.opacity = 1;
+          });
+
+          link.addEventListener('click', function(event) {
+            // Send a message to background script
+            chrome.runtime.sendMessage({ redirect: "landing_page.html" }, function(response) {
+                console.log("Message sent to background script");
+            });
+        });
+
         }
         if(side_menu && toggle1){
             side_menu.style.display = "none";
@@ -66,7 +106,7 @@ var justDoIt = function (){
         all_comment_buttons.forEach(element => element.remove());
       }
 
-    } else { // User watching a video
+    } else if (window.location.href.includes("youtube.com/watch"))  { // User watching a video
       //related_element refers to the recommended videos shown on the side
       let related_element = document.querySelector('#related').querySelector("#items");
       let comments_element = document.querySelector("#comments")
@@ -97,7 +137,7 @@ async function load_values() {
     toggle2 = hidden_comms.hide_coms;
 
     // repeatedly tries to find elements every 100 ms to hide them
-    interval_id = setInterval(function () {justDoIt()}, 30);
+    interval_id = setInterval(function () {justDoIt()}, 10);
   } catch {}
 };
 load_values();

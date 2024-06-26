@@ -240,18 +240,13 @@ let start_break = async function(break_time_value) {
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  // Check if the message is a request for info
-  // if (request.action == "getTime") {
-  //   console.log("Requested time")
 
-  //   getCurrentBreakTime().then((value) => {
-  //     let current_break_time = value;
-  //     sendResponse(current_break_time);
-  //   });
-
-  // }
   if (request.action == "start") {
     start_break(request.value);
+
+  } else if (request.redirect == "landing_page.html") {
+    var landingPageUrl = chrome.runtime.getURL(request.redirect);
+    chrome.tabs.update(sender.tab.id, { url: landingPageUrl });
   }
 });
 
