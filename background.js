@@ -246,7 +246,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
   } else if (request.redirect == "landing_page.html") {
     var landingPageUrl = chrome.runtime.getURL(request.redirect);
-    chrome.tabs.update(sender.tab.id, { url: landingPageUrl });
+    chrome.tabs.create({ url: landingPageUrl });
   }
 });
 
