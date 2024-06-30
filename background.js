@@ -146,7 +146,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
       if ((blocked == 0) || (blocked == 1)) {
         blocked = 1;
-        chrome.tabs.update({ url: chrome.runtime.getURL("timer.html") });
+        chrome.tabs.update(tabId, { url: chrome.runtime.getURL("timer.html") });
 
         get_timer().then((value) => {
           setTimeout(() => {
