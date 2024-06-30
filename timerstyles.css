@@ -18,8 +18,8 @@ body {
     transform: translate(-50%, -50%);
     border: white 2px solid;
 
-    width: 80%;
-    height: 55%;
+    width: clamp(500px, 80%, 80%);
+    height: clamp(400px, 55%, 55%);
     grid-template-columns: repeat(2, 5fr) repeat(3, 2fr) repeat(2, 5fr);
     grid-template-rows: repeat(8, 5fr);
 
@@ -54,7 +54,7 @@ body {
 
 #proceed {
     grid-area: 6 / 3 / 7 / 6;
-    border: grey 3px solid; 
+    border: grey 3px solid;
     border-radius: 5px;
     height: 50px;
     font-size: 1.1rem;
@@ -63,8 +63,8 @@ body {
 }
 
 #proceed:hover {
-    background-color: rgb(223, 41, 41); 
+    background-color: rgb(223, 41, 41);
     transform: translateY(-5px);
-    box-shadow: 0px 0px 6px 2px red; 
-    border: rgb(160, 6, 34) 3px solid; 
+    box-shadow: 0px 0px 6px 2px red;
+    border: rgb(160, 6, 34) 3px solid;
 }
