@@ -39,7 +39,7 @@ body {
 .exit {
     grid-area: 3 / 3 / 4 / 6;
     border: grey 3px solid;
-    border-radius: 5px;;
+    border-radius: 5px;
     height: 50px;
     font-size: 1.1rem;
     transition: transform 0.2s;

@@ -8,22 +8,21 @@ let toggle2 = true;
 
 let reload_counter = 1;
 
+// YouTube home page needs to be reloaded when user comes from watching a video to home page by clicking the YT home button
+// Cuz otherwise the stuff doesn't get hidden
 function reload_home() {
 
   if (reload_counter == 0) {
     location.reload(true);
     reload_counter++;
+    return true;
   }
+  return false;
 }
 
 // function to hide recommendations and comments
 var justDoIt = function (){
-
-  let noti_element = document.querySelector(".notification-button-style-type-default");
-
-  if (noti_element) {
-    noti_element.remove()
-  }
+  console.log("JustDoit running rn…")
 
   // Checking if the user is on YouTube's home page
   if ((window.location.href.indexOf("watch?v=") < 0) &&
@@ -31,8 +30,11 @@ var justDoIt = function (){
       window.location.href.startsWith("https://www.youtube.com/?bp"))) {
 
     // 	body > ytd-app #content > ytd-page-manager, remove this element in subscription feed
-    if (!toggle1) {
-      reload_home();
+    if (toggle1) {
+      // If page is being reloaded, doesn't execute the rest of the code right now
+      if (reload_home()) {
+        return
+      }
     }
 
     // side_menu is the side bar element on YouTube's website (showing the user's subscriptions etc)
@@ -44,10 +46,10 @@ var justDoIt = function (){
     if (primary != null) {
         clearInterval(interval_id);
 
-        if(toggle1){
+        if(toggle1) {
           primary.style.display = "none";
+          side_menu.style.display = "none";
 
-          if (window.location.href.endsWith("youtube.com/")) {
               let sign_post = document.createElement('span');
               sign_post.id = "hidden_sign_post";
               sign_post.textContent = "Recommendations are hidden";
@@ -87,20 +89,10 @@ var justDoIt = function (){
                     console.log("Message sent to background script");
                 });
               });
-          }
         }
-        if(side_menu && toggle1){
-            side_menu.style.display = "none";
-        }
-    }
+      }
 
   } else { // This means that the user is watching a video / short
-
-    let settings_sign_post = document.body.querySelector("#hidden_sign_post")
-
-    if (settings_sign_post != null) {
-      settings_sign_post.remove();
-    }
 
     // User watching a short
     if (window.location.href.includes("youtube.com/shorts")) {
@@ -135,6 +127,7 @@ var justDoIt = function (){
   }
 }
 
+let wait_time = 3
 let interval_id = null;
 // Load settings for whether recommendations and comments need to be hidden
 async function load_values() {
@@ -144,8 +137,9 @@ async function load_values() {
     toggle1 = hidden_recs.hide_recs;
     toggle2 = hidden_comms.hide_coms;
 
-    // repeatedly tries to find elements every 3 ms to hide them
-    interval_id = setInterval(function () {justDoIt()}, 3);
+    // repeatedly tries to find elements to hide them
+    wait_time = wait_time * 30;
+    interval_id = setInterval(function () {justDoIt()}, wait_time);
   } catch {}
 };
 load_values();
@@ -153,6 +147,12 @@ load_values();
 // Listen for whenever page reloads, then load values (load values calls justDoit())
 chrome.runtime.onMessage.addListener((obj, sender, response) => {
   reload_counter = 0;
+  let settings_sign_post = document.body.querySelector("#hidden_sign_post")
+
+  if (settings_sign_post != null) {
+    settings_sign_post.remove();
+  }
+
     if (obj === "reloaded") {
         load_values();
     }
