@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Distraction Blocker for YouTube",
-    "version": "1.2",
-    "description": "Curb YouTube addiction without blocking YouTube completely",
+    "name": "YouTube's Distraction Blocker",
+    "version": "1.2.1",
+    "description": "Curbs YouTube addiction without blocking YouTube completely",
     "permissions": [
       "tabs",
       "storage"

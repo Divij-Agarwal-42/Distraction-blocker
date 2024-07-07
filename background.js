@@ -184,7 +184,7 @@ chrome.runtime.onInstalled.addListener(function(details){
 
   if(details.reason == "install"){
     // Setting default values
-    set_timeout_settings(true, true, true);
+    set_timeout_settings(true, false, true);
     hide_stuff(true, true);
     set_timer("10");
     set_break_settings(10, true, false);
