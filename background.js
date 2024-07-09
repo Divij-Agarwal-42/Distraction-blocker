@@ -156,9 +156,12 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
         })
 
       }
+
       if (blocked == 1) {
         blocked = 0;
       }
+    } else if (blocked == 1) {
+      blocked = 0;
     }
 
   })
