@@ -89,7 +89,7 @@ async function update_time() {
 async function toggle_recommendations() {
   let toggle1 = document.getElementById("recommendationsToggle").checked;
   let toggle2 = document.getElementById("commentsToggle").checked;
-  
+
   if (break_settings_status == 0) {
     try {
       await hide_stuff(toggle1, toggle2);
@@ -178,3 +178,25 @@ breakSettingsButton.addEventListener("click", function (event) {
     load_time();
   }
 })
+
+function fadeOut(elementId, duration) {
+  console.log("Function works");
+  var element = document.getElementById(elementId);
+  var alpha = 0.8;
+  var intervalTime = 100; // Time interval in milliseconds
+
+  var timer = setInterval(function() {
+      alpha -= 0.5; // Decrease alpha value (you can adjust the decrement value)
+
+      // Apply new alpha value
+      element.style.opacity = alpha;
+
+      // Check if fading is complete
+      if (alpha <= 0) {
+          clearInterval(timer);
+      }
+  }, intervalTime);
+}
+
+// Example usage: fade out the element with id "notif" over 2 seconds (2000 milliseconds)
+fadeOut('notif', 2000);
