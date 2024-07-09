@@ -116,7 +116,9 @@ function close_all_tabs(close_this_link) {
   });
 }
 
-let blocked = 0;
+let blocked = 0; // Blocked = 0 means this video / short needs to be blocked
+// Blocked = 1 means we are just coming from timeout so DON'T block again
+
 let timerInterval;
 
 // When browser is opened (background first loads, any previous break will be ended)
@@ -144,22 +146,21 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
       set_initial_url(tab.url);
 
-      if ((blocked == 0) || (blocked == 1)) {
-        blocked = 1;
+      if (blocked == 0) {
         chrome.tabs.update(tabId, { url: chrome.runtime.getURL("timer.html") });
 
         get_timer().then((value) => {
           setTimeout(() => {
-            blocked = 2;
+            blocked = 1;
           }, (value) * 1000);
         })
 
       }
+      if (blocked == 1) {
+        blocked = 0;
+      }
     }
 
-    if (blocked == 2) {
-      blocked = 0;
-    }
   })
 
 
