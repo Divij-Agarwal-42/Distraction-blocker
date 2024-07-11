@@ -126,6 +126,7 @@ chrome.runtime.onStartup.addListener(() => {
   chrome.storage.local.set({ ongoing: false })
 });
 
+let prevUrl;
 //Listening for changes in url
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
@@ -144,24 +145,18 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
     if (tab.url && ((status_type.videos && tab.url.includes("youtube.com/watch")) ||
       (status_type.shorts && tab.url.includes("youtube.com/shorts")))) {
 
-      set_initial_url(tab.url);
+      if (tab.url != prevUrl) {
+        set_initial_url(tab.url);
+        prevUrl = tab.url;
 
-      if (blocked == 0) {
         chrome.tabs.update(tabId, { url: chrome.runtime.getURL("timer.html") });
 
         get_timer().then((value) => {
           setTimeout(() => {
-            blocked = 1;
           }, (value) * 1000);
         })
 
       }
-
-      if (blocked == 1) {
-        blocked = 0;
-      }
-    } else if (blocked == 1) {
-      blocked = 0;
     }
 
   })
