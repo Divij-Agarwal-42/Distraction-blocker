@@ -8,8 +8,11 @@ let timeoutcheckbox = document.getElementById("timeoutcheckbox");
 let videosToggle = document.getElementById("videosToggle");
 let shortsToggle = document.getElementById("shortsToggle");
 let breakSettingsButton = document.getElementById("breakSettings");
+let notif_counter = 0; // Tracks if notification for reloading youtube has already been shown
 
 const currentTimeStartText = "Time set to: "
+let notif = document.getElementById("notif");
+// notif.style.visibility = "hidden";
 
 // Hides settings if a break is underway
 get_break_settings().then(breakSettings => {
@@ -89,7 +92,7 @@ async function update_time() {
 async function toggle_recommendations() {
   let toggle1 = document.getElementById("recommendationsToggle").checked;
   let toggle2 = document.getElementById("commentsToggle").checked;
-  
+
   if (break_settings_status == 0) {
     try {
       await hide_stuff(toggle1, toggle2);
@@ -178,3 +181,34 @@ breakSettingsButton.addEventListener("click", function (event) {
     load_time();
   }
 })
+
+function fadeOut(elementId, duration) {
+  console.log("Function works");
+  var element = document.getElementById(elementId);
+  var alpha = 0.8;
+  var intervalTime = 100; // Time interval in milliseconds
+
+  var timer = setInterval(function() {
+      alpha -= 0.5; // Decrease alpha value (you can adjust the decrement value)
+
+      // Apply new alpha value
+      element.style.opacity = alpha;
+
+      // Check if fading is complete
+      if (alpha <= 0) {
+          clearInterval(timer);
+      }
+  }, intervalTime);
+}
+
+const toggles = document.getElementsByClassName("toggle");
+
+for (let i = 0; i < toggles.length; i++) {
+  toggles[i].addEventListener("click", function() {
+    if (notif_counter == 0) {
+      notif.style.visibility = "visible";
+      notif_counter++;
+      notif.style.opacity = 0;
+    }
+  });
+}

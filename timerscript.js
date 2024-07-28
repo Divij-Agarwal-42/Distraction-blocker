@@ -20,7 +20,8 @@ function startCountdown(start_time) {
 (async () => {
     try {
       let fetched_time = await get_timer();
-      startCountdown(fetched_time);
+      startCountdown(+fetched_time + 1);
+      // Adding 1 to fetched time to prevent proceed button from appearing before background.js timer ending
     } catch {
 
     }
