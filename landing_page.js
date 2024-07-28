@@ -8,8 +8,11 @@ let timeoutcheckbox = document.getElementById("timeoutcheckbox");
 let videosToggle = document.getElementById("videosToggle");
 let shortsToggle = document.getElementById("shortsToggle");
 let breakSettingsButton = document.getElementById("breakSettings");
+let notif_counter = 0; // Tracks if notification for reloading youtube has already been shown
 
 const currentTimeStartText = "Time set to: "
+let notif = document.getElementById("notif");
+// notif.style.visibility = "hidden";
 
 // Hides settings if a break is underway
 get_break_settings().then(breakSettings => {
@@ -198,5 +201,14 @@ function fadeOut(elementId, duration) {
   }, intervalTime);
 }
 
-// Example usage: fade out the element with id "notif" over 2 seconds (2000 milliseconds)
-fadeOut('notif', 2000);
+const toggles = document.getElementsByClassName("toggle");
+
+for (let i = 0; i < toggles.length; i++) {
+  toggles[i].addEventListener("click", function() {
+    if (notif_counter == 0) {
+      notif.style.visibility = "visible";
+      notif_counter++;
+      notif.style.opacity = 0;
+    }
+  });
+}

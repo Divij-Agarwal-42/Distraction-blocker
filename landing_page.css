@@ -180,7 +180,7 @@ a {
 }
 
 #notif {
-    background-color: rgba(255, 255, 255, 0.875);
+    background-color: rgb(255, 255, 255);
     font-size: 1rem;
     font-family: "Roboto";
     width: 200px;
@@ -191,4 +191,7 @@ a {
     top: 5%;
     right: 3%;
     box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.875);
+
+    visibility: hidden;
+    transition: opacity 10s ease-in;
 }
