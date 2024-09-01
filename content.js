@@ -127,7 +127,7 @@ var justDoIt = function (){
   }
 }
 
-let wait_time = 3
+let wait_time = 1;
 let interval_id = null;
 // Load settings for whether recommendations and comments need to be hidden
 async function load_values() {
@@ -138,7 +138,7 @@ async function load_values() {
     toggle2 = hidden_comms.hide_coms;
 
     // repeatedly tries to find elements to hide them
-    wait_time = wait_time * 30;
+    wait_time = wait_time * 5;
     interval_id = setInterval(function () {justDoIt()}, wait_time);
   } catch {}
 };
