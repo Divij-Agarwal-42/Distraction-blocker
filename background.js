@@ -4,13 +4,18 @@ export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_
   set_timeout_settings, get_timeout_settings, set_break_settings, get_break_settings, start_break, set_break_hide_stuff,
   set_break_timeout, set_break_timeout_time };
 
+
+let set_user_number = async (num) => {
+  await chrome.storage.local.set({ user_number: num })
+}
+
 // Storing value of timer value
 let set_timer = async (time) => {
-    if (time == "0") {
-      time = "1";
-    }
+  if (time == "0") {
+    time = "1";
+  }
 
-    await chrome.storage.local.set({ time_value: time })
+  await chrome.storage.local.set({ time_value: time })
 }
 
 // Setting value for url
@@ -47,6 +52,15 @@ let set_break_timeout_time = async (time) => {
   }
 
   await chrome.storage.local.set({ break_timeout_time: time })
+}
+
+async function get_user_number() {
+  try {
+    let result = await chrome.storage.local.get(["user_number"]);
+    return result.user_number;
+  } catch {
+    return -1;
+  }
 }
 
 // Getting values for having timeout on shorts / videos
@@ -179,6 +193,36 @@ async function going_back() {
   }
 }
 
+let server_ip = "35.197.15.174";
+
+// Fetching anonymous user number from a server for analytics
+async function fetch_user_number() {
+  let user_num = -1;
+  try {
+    const response = await fetch(`http://${server_ip}:3000/user_number`);
+    const data = await response.text();
+    user_num = parseInt(data, 10);
+  } catch(err) {
+    console.log(err);
+    return -1;
+  }
+  return user_num;
+}
+
+// First sees if there's a locally saved user number, if not, fetches it from server
+// Returns -1 if it can't reach server
+async function check_and_get_user_number() {
+  let user_num = await get_user_number();
+  if (user_num == -1 || user_num == null) {
+    user_num = await fetch_user_number();
+    if (user_num == -1) {
+      return -1;
+    }
+    set_user_number(user_num);
+  }
+  return user_num;
+}
+
 chrome.runtime.onInstalled.addListener(function(details){
 
   if(details.reason == "install"){
@@ -191,6 +235,10 @@ chrome.runtime.onInstalled.addListener(function(details){
     set_break_hide_stuff(false, false);
     set_break_timeout(false, false);
     set_break_timeout_time("10");
+
+    fetch_user_number().then((user_num) => {
+      set_user_number(user_num);
+    });
   }
 
 });
@@ -204,12 +252,7 @@ let remainingTime = 0;
 
 let updateTimer = function() {
   remainingTime--;
-  console.log(remainingTime);
-  get_break_settings().then((value) => {
-    console.log(("ongoing value is: ", value.ongoing));
-  })
   if (remainingTime <= 0) {
-    console.log("time is 0 moment detected, end break should be initiated");
     end_break();
     try {
     clearInterval(timerInterval);
@@ -238,6 +281,31 @@ let start_break = async function(break_time_value) {
   timerInterval = setInterval(updateTimer, 1000);
 }
 
+// Send data to server with anonymouse user id and click type
+// click type: tracks whether user clicked on settings, toggle buttons etc
+function send_data(current_user, click_type) {
+  if (typeof current_user === 'string') {
+    current_user = parseInt(current_user, 10);
+  }
+
+  // -1 means it's not a valid user, so function doesn't execute anything
+  if (current_user <= -1) {
+    return;
+  }
+  fetch(`http://${server_ip}:3000/analytics`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          user: current_user,
+          click: click_type
+      })
+  }).catch(() => {
+      return;
+  });
+}
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
   if (request.action == "start") {
@@ -246,13 +314,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   } else if (request.redirect == "landing_page.html") {
     var landingPageUrl = chrome.runtime.getURL(request.redirect);
     chrome.tabs.create({ url: landingPageUrl });
+
+    // This means that user clicked "settings" link on home page
+    check_and_get_user_number().then((user_num) => {
+      send_data(user_num, "settings_click");
+    });
   }
 });
 
 let end_break = async function() {
-  console.log("end break function is starting up")
-  console.log("Rec toggle", recommendationsToggle, "comments", commentsToggle, "enable timeo", enableTimoutToggle
-    , "video togg", videosToggle, "shorts toggle", shortsToggle);
   await hide_stuff(recommendationsToggle, commentsToggle);
   await set_timeout_settings(enableTimoutToggle, videosToggle, shortsToggle);
   let break_settings = await get_break_settings();

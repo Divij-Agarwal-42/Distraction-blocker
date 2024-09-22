@@ -84,9 +84,8 @@ var justDoIt = function (){
               });
 
               link.addEventListener('click', function(event) {
-                // Send a message to background script
+                // Send a message to background script for redirecting to settings page
                 chrome.runtime.sendMessage({ redirect: "landing_page.html" }, function(response) {
-                    console.log("Message sent to background script");
                 });
               });
         }
