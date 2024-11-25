@@ -1,3 +1,11 @@
+/*
+
+This file handles the "timeout" page that comes before videos / shorts
+Implements the timer countdown
+Implements functionality for proceed and exit buttons
+
+*/
+
 import { going_back, get_timer, close_site } from "./background.js";
 
 const proceedButton = document.querySelector('#proceed');
@@ -6,6 +14,7 @@ function startCountdown(start_time) {
     function countdown() {
         if (start_time > 0) {
             start_time--;
+            // Updating timer text (for eg to 10s, 9s etc)
             document.getElementsByClassName("countdown")[0].innerHTML = start_time;
             setTimeout(countdown, 1000);
         } else {
@@ -27,9 +36,8 @@ function startCountdown(start_time) {
     }
 })();
 
+// If user clicks exit -> the window is closed and a new tab is opened
 const exitButton = document.querySelector('.exit');
-
-// Set the window location to an empty string to exit the site
 exitButton.addEventListener('click', function() {
   close_site();
   window.close();
