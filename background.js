@@ -1,9 +1,18 @@
-// These functions are being used by timerscript.js and landing_page.js
+/*
 
+background.js
+
+This file contains the main code that's running in the background in the extension (can't access front end elements directly)
+This file handles the logic for timeouts, breaks etc
+The beginning of the file contains some set and get methods.
+All the set methods are for storing different values local chrome storage. All get methods are for retriveing these values
+
+*/
+
+// These functions are being used by timerscript.js and landing_page.js
 export { going_back, set_timer, get_timer, hide_stuff, get_hiding_values, close_site,
   set_timeout_settings, get_timeout_settings, set_break_settings, get_break_settings, start_break, set_break_hide_stuff,
   set_break_timeout, set_break_timeout_time };
-
 
 let set_user_number = async (num) => {
   await chrome.storage.local.set({ user_number: num })
@@ -63,7 +72,7 @@ async function get_user_number() {
   }
 }
 
-// Getting values for having timeout on shorts / videos
+// Getting true / false values for having timeout on shorts / videos
 async function get_timeout_settings() {
   try {
     let videos_status = await chrome.storage.local.get(["v"]);
@@ -120,6 +129,7 @@ let get_break_settings = async function() {
   return break_settings;
 };
 
+// Useful to close all youtube tabs when the break ends
 function close_all_tabs(close_this_link) {
   chrome.tabs.query({}, function (tabs) {
     tabs.forEach(function (tab) {
@@ -129,9 +139,6 @@ function close_all_tabs(close_this_link) {
     });
   });
 }
-
-let blocked = 0; // Blocked = 0 means this video / short needs to be blocked
-// Blocked = 1 means we are just coming from timeout so DON'T block again
 
 let timerInterval;
 
@@ -149,7 +156,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
   if (tab.url && tab.url.includes("youtube.com")) {
     chrome.tabs.sendMessage(tabId, "reloaded", function(response) {
       if (chrome.runtime.lastError) {
-          // Ignore as this usually occurs just the first time
+        // Ignore as this usually occurs just the first time
       }
     });
   }
@@ -180,7 +187,6 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
 
 // Close the site, open new tab, when exit is clicked on timer
 function close_site() {
-  blocked = 0;
   chrome.tabs.create({ url: 'chrome://newtab' });
 }
 
@@ -199,7 +205,7 @@ let server_ip = "35.197.15.174";
 async function fetch_user_number() {
   let user_num = -1;
   try {
-    const response = await fetch(`http://${server_ip}:3000/user_number`);
+    const response = await fetch(`https://${server_ip}:3000/user_number`);
     const data = await response.text();
     user_num = parseInt(data, 10);
   } catch(err) {
@@ -292,7 +298,7 @@ function send_data(current_user, click_type) {
   if (current_user <= -1) {
     return;
   }
-  fetch(`http://${server_ip}:3000/analytics`, {
+  fetch(`https://${server_ip}:3000/analytics`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -307,7 +313,6 @@ function send_data(current_user, click_type) {
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-
   if (request.action == "start") {
     start_break(request.value);
 

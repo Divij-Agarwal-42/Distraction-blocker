@@ -46,5 +46,4 @@ exitButton.addEventListener('click', function() {
 
 proceedButton.addEventListener('click', function() {
     going_back();
-    //window.location.href = initial_url;
 })
